@@ -1,0 +1,42 @@
+.box {
+    position: relative;
+    width: 700 !important;
+}
+
+.box canvas {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+.jumbotron {
+    background: linear-gradient(45deg, grey 15%, beige 55%, green 75%);
+    height: 200px;
+} 
+
+.container {
+    padding-top: 20px;
+}
+
+.container-div {
+    padding-bottom: 20px;
+}
+
+.list-demo {
+    display: flex;
+    list-style: none;
+}
+
+.list-item-demo {
+    padding: 10px;
+}
+
+.list-div{
+    margin: 0.5rem;
+    border: 1px solid black;
+    border-radius: 25px;
+}
+
+.list-item-demo:hover {
+    cursor: grab;
+}

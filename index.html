@@ -1,0 +1,131 @@
+<html>
+
+<head>
+    <title>ChromaKey</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+</head>
+
+<body>
+    <div class="jumbotron jumbotron-fluid" style="display: flex;">
+        <div class="container">
+            <h1 class="display-4">The ChromaKey Effect</h1>
+            <p class="lead">Welcome, at this platform you can customise any of your videos with your favorite
+                backgrounds.
+            </p>
+        </div>
+    </div>
+    <!-- demo -->
+    <div style="padding-top: 20px; padding-left: 20px;">
+        <h3>Check out the Demo here.</h3>
+    </div>
+    <!-- list of demo -->
+    <ul class="list-demo">
+        <div class="list-div">
+            <li onclick="changeSrc(this.id)" id="li-1" class="list-item-demo">Demo 1</li>
+        </div>
+        <div class="list-div">
+            <li onclick="changeSrc(this.id)" id="li-2" class="list-item-demo">Demo 2</li>
+        </div>
+        <div class="list-div">
+            <li onclick="changeSrc(this.id)" id="li-3" class="list-item-demo">Demo 3</li>
+        </div>
+        <div class="list-div">
+            <li onclick="changeSrc(this.id)" id="li-4" class="list-item-demo">Demo 4</li>
+        </div>
+    </ul>
+    <div class="container" style="display: flex; margin-left: 7px;">
+        <video src="videos/video.mp4" id="v1" style="width: 700; border: 1px solid black;" controls muted loop></video>
+        <div class="box">
+            <video src="videos/bg2.mp4" id="v2" style="width: 700;" autoplay muted loop></video>
+            <canvas id="c1" style="border: 1px solid black; width: 700px; height: 395px;"></canvas>
+        </div>
+    </div>
+    <div class="container">
+        <h3>Create your own videos with favorite backgrounds</h3>
+        <div class="container-div">
+            <label>Upload your green screen video here</label>
+            <input type="file" accept="video/*" id="uploadVideo" onchange="upload()">
+            <label>Upload your background image/video here</label>
+            <input type="file" accept="video/*" id="uploadBack" onchange="uploadBack()">
+            <!-- <button id="start" onclick="start()">Start</button> -->
+        </div>
+    </div>
+    <script>
+        const box = document.querySelector(".box");
+        let video2 = document.getElementById("v2");
+        const video = document.getElementById("v1");
+        let height = video.clientHeight;
+        let width = video.clientWidth;
+
+        const c1 = document.getElementById("c1");
+        c1.setAttribute("height", height);
+        c1.setAttribute("width", width);
+        const ctx1 = c1.getContext("2d");
+
+        video.addEventListener("play", drawVid);
+
+        function drawVid() {
+            ctx1.drawImage(video, 0, 0, width, height);
+            // removing green pixels
+            let frame = ctx1.getImageData(0, 0, width, height);
+            for (let i = 0; i < frame.data.length; i += 4) {
+                let r = frame.data[i];
+                let g = frame.data[i + 1];
+                let b = frame.data[i + 2];
+
+                // convert the rgb values to hsl format
+                // obtaining only the "hue"
+                let h = rgbToHsl(r, g, b);
+                // console.log("hue value : ", h);
+
+                if (r >= 0 & r < 100 & g >= 100 & g <= 255 & b < 60) {
+                    frame.data[i + 3] = 0;
+                }
+                // if (h >= 81 & h <= 140) {
+                //     frame.data[i + 3] = 0;
+                // }
+            }
+            ctx1.putImageData(frame, 0, 0);
+            requestAnimationFrame(drawVid);
+        }
+
+        function rgbToHsl(r, g, b) {
+            r /= 255;
+            g /= 255;
+            b /= 255;
+
+            let cmin = Math.min(r, g, b);
+            let cmax = Math.max(r, g, b);
+            let delta = cmin - cmax;
+
+            let h = 0;
+
+            if (delta == 0) h = 0;
+            else if (cmax == r) {
+                h = ((g - b) / delta) % 6;
+            }
+            else if (cmax == g) {
+                h = ((b - r) / delta) + 2;
+            }
+            else {
+                h = ((r - g) / delta) + 4;
+            }
+
+            // rounding if off to degrees
+            h = Math.round(h * 60);
+
+            // h value can't be negative
+            if (h < 0) {
+                h += 360;
+            }
+
+            // finally we return the obtained h value
+            return h;
+        }
+    </script>
+    <script src="./functions/main.js"></script>
+</body>
+
+</html>
