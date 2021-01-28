@@ -14,3 +14,6 @@ Demonstration of removing green effect from images and videos and adding crazy b
 
 This will start the server at port: 8000 
 Go to link - https://localhost:8000 on your local machine to see the working chromakey effect. 
+
+# This Node project is also hosted on Heroku.
+Link - https://chromakeying.herokuapp.com/
